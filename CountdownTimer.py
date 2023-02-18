@@ -11,21 +11,30 @@ def validate_number(user_input):
     else:
         return n
 
-def countdown(seconds):
+def countdown(seconds, fps):
+    fps = 1/fps
+    last = time.time()
+    printed = False
+    
     while seconds > 0:
-        seconds_format = time.strftime("%H:%M:%S", time.gmtime(seconds))
-        print(seconds_format + "\t('q' to quit)", end="")
-        print("\r", end="")
-        seconds -= 1        
+        if printed is False:
+            seconds_format = time.strftime("%H:%M:%S", time.gmtime(seconds))
+            print(seconds_format + "\t('q' to quit)", end="")
+            print("\r", end="")
+            printed = True
         
+        if time.time() - last >= 1:
+            printed = False
+            last = time.time()
+            seconds -= 1
+                        
         if keyboard.is_pressed('q'):
             break
         
-        time.sleep(1)
-    
+        time.sleep(fps)
+        
     sys.stdout.write("Done!" + " " * 25)    
 
 seconds = validate_number(input("Enter seconds: "))
-
 if seconds != 0:
-    countdown(seconds)
+    countdown(seconds, 60)
